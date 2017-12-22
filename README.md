@@ -1,2 +1,2 @@
-# util-mixins
+# Sass --> util-mixins
 util-mixins
