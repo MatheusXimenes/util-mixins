@@ -7,7 +7,7 @@
 /// Loop for CSS3 prefixes - type 1
 /// @param {any} $property property 
 /// @param {any} $value value
-@mixin css3($property, $value, $prefixes: (webkit moz ms o)) {
+@mixin prefix($property, $value, $prefixes: (webkit moz ms o)) {
     @each $prefix in $prefixes {
       #{'-' + $prefix + '-' + $property}: $value;
     }
@@ -15,16 +15,18 @@
     #{$property}: $value;
   }
 
+
 /// Loop for CSS3 prefixes - type 2
 /// @param {any} $property property 
 /// @param {any} $value value
-@mixin other_css3($property, $value, $prefixes: (webkit moz ms o)) {
+@mixin other_prefix($property, $value, $prefixes: (webkit moz ms o)) {
     @each $prefix in $prefixes {
         #{$property}: #{'-'+$prefix+'-'+$value};
     }
     // Non-prefixed declaration
     #{$property}: $value;
 }
+
 
 /// Select Especific CSS for a especific Brownser
 /// @param {any} $browser type of Brownser 
@@ -36,27 +38,31 @@
     }
   }
 
+
 /// Rotation with CSS3
 /// @param {deg} $rotation 7deg (default)
-/// Require css3 mixin
+/// Require prefix mixin
 @mixin rotate($rotation: 7deg){
-    @include css3(transform, rotate($rotation));}
+    @include prefix(transform, rotate($rotation));}
+
 
 /// Rounder Corner with CSS3
 /// @param {em} $radius 0.5em (default)
-/// Require css3 mixin
+/// Require prefix mixin
 @mixin rounded($radius: 0.5em) {
-    @include css3(border-radius, $radius);}
+    @include prefix(border-radius, $radius);}
+
 
 /// Gradient in Gerenal
 /// @param {color} $from first-color
 /// @param {color} $to second-color
 /// @param {direction} $direction top (default)
-/// Require other_css3 mixin
+/// Require other_prefix mixin
 @mixin gradient($from, $to, $direction: top) {
     background-color: $from;
-    @include other_css3(background, linear-gradient($direction, $from, $to));
+    @include other_prefix(background, linear-gradient($direction, $from, $to));
     filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$from}', endColorstr='#{$to}');}
+
 
 /// Opacity
 /// @param {color} $color white (default)
@@ -65,3 +71,32 @@
     background: $color;
     background: rgba($color, $opacity);}
 
+
+/// Box Shadow
+/// @param {horizontal} $horizontal 
+/// @param {colverticalor} $colverticalor 
+/// @param {blur} $blur
+/// @param {spread} $spread '' (default)
+/// @param {color} $color rgba(0,0,0,0.1) (default)
+/// Require prefix mixin
+@mixin box-shadow($horizontal, $vertical, $blur, $spread: '', $color: 'rgba(0,0,0,0.1)') {
+    @if ($inset != "") {
+        @include prefix(box-shadow, $inset $horizontal $vertical $blur $spread $color);
+    } @else {
+        @include prefix(box-shadow, $horizontal $vertical $blur $spread $color);
+    }
+
+    filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius=#{$spred},MakeShadow=true,ShadowOpacity=0.32);
+	-ms-filter: "progid:DXImageTransform.Microsoft.Blur(PixelRadius=#{$spred},MakeShadow=true,ShadowOpacity=0.30)";
+    zoom: 1;
+}
+
+
+/// Transitions
+/// @param {property} $property none (default)
+/// @param {time} $time 0.5s (default)
+/// @param {type} $type ease (default)
+/// Require prefix mixin
+@mixin transition($property, $time: 0.5s, $type: ease) {
+    @include prefix(transition, $property $time $type);
+}
